@@ -1,7 +1,16 @@
 #!/usr/bin/env node
 const fs = require('fs');
 
-const name = 'tangram-skeleton';
+var args = process.argv.slice(2);
+console.log(args);
+
+let name;
+if (args.length === 1) {
+   name = args[0];
+} else {
+   name = 'tangram-skeleton';
+}
+
 const html =
 `<html lang="en-us">
 
