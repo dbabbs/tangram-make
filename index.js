@@ -74,36 +74,76 @@ sources:
         url_params:
             access_token: XYZ-TOKEN
 
+global:
+    language: en
+    language_text_source: |
+        function() {
+            return (global.language && feature['name:'+global.language]) || feature.name;
+        }
 layers:
     xyz_space:
         data: { source: _xyz_space}
         draw:
-            points:
+            lines:
                 order: 10000000
-                color: black
-                width: 20px
+                color: '#8B9ED4'
+                width: 2px
                 interactive: true
                 collide: false
+    places:
+        data: { source: xyz_osm }
+        city-points:
+            filter:
+                kind: locality
+                kind_detail: city
+                $zoom: { max: 18 }
+            draw:
+                 text:
+                     text_source: global.language_text_source
+                     priority: 10
+                     order: 999
+                     font:
+                         family: Roboto Mono
+                         fill: '#C3CDD4'
+                         stroke: { color: white, width: 4 }
+                         size: [[4, 15px], [8, 18px], [12, 26px]]
+                         buffer: 2px
+        city-points:
+            filter:
+                kind: locality
+                kind_detail: city
+                $zoom: { max: 18 }
+            draw:
+                 text:
+                     text_source: global.language_text_source
+                     priority: 10
+                     order: 999
+                     font:
+                         family: Roboto Mono
+                         fill: '#C3CDD4'
+                         stroke: { color: white, width: 4 }
+                         size: [[4, 15px], [8, 18px], [12, 26px]]
+                         buffer: 2px
     earth:
         data: { source: xyz_osm }
         draw:
             polygons:
                 order: function() { return feature.sort_rank; }
-                color: '#E4E9EC'
+                color: 'white'
 
     landuse:
         data: { source: xyz_osm }
         draw:
             polygons:
                 order: function() { return feature.sort_rank; }
-                color: [0.827, 0.890, 0.875, 1.00]
+                color: '#E9EEF1'
 
     water:
         data: { source: xyz_osm }
         draw:
             polygons:
                 order: function() { return feature.sort_rank; }
-                color: '#C3CDD4'
+                color: '#DEE1E3'
 
     roads:
         data: { source: xyz_osm }
@@ -121,17 +161,10 @@ layers:
             draw:
                 lines:
                     order: function() { return feature.sort_rank; }
-                    color: |
-                        function() {
-                            if ($zoom < 10) {
-                                return '#BFBFBF';/*'#8B9ED4'*/;
-                             } else {
-                                 return 'white'/*'#8B9ED4'*/;
-                             }
-                        }
+                    color: '#D3DCE1'
                     width: [[5, 5000], [8, 800], [10, 200], [12, 100],[14,40], [18, 20]]
                     outline:
-                        color: lightgrey
+                        color: '#EEEEEE'
                         width: [[16, 0], [18, 1.5]]
         minor_road:
             filter:
@@ -153,6 +186,7 @@ layers:
             draw:
                 polygons:
                     extrude: function () { return feature.height > 20 || $zoom >= 16; }
+
 `
 
 if (!fs.existsSync(`./${name}`)){
