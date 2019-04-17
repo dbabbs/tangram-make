@@ -71,16 +71,20 @@ const yaml =
 `cameras:
     camera1:
         type: perspective
+global:
+    token: XYZ-TOKEN
 sources:
     xyz_osm:
         type: MVT
         url: https://xyz.api.here.com/tiles/osmbase/256/all/{z}/{x}/{y}.mvt
         max_zoom: 16
+        url_params:
+            access_token: global.token
     _xyz_space:
         type: GeoJSON
         url: https://xyz.api.here.com/hub/spaces/XYZ-SPACE-ID/tile/web/{z}_{x}_{y}
         url_params:
-            access_token: XYZ-TOKEN
+            access_token: global.token
 
 global:
     language: en
