@@ -73,6 +73,11 @@ const yaml =
         type: perspective
 global:
     token: XYZ-TOKEN
+    language: en
+    language_text_source: |
+        function() {
+            return (global.language && feature['name:'+global.language]) || feature.name;
+        }
 sources:
     xyz_osm:
         type: MVT
@@ -85,13 +90,6 @@ sources:
         url: https://xyz.api.here.com/hub/spaces/XYZ-SPACE-ID/tile/web/{z}_{x}_{y}
         url_params:
             access_token: global.token
-
-global:
-    language: en
-    language_text_source: |
-        function() {
-            return (global.language && feature['name:'+global.language]) || feature.name;
-        }
 layers:
     xyz_space_lines:
         data: { source: _xyz_space}
