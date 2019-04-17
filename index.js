@@ -4,11 +4,19 @@ const fs = require('fs');
 var args = process.argv.slice(2);
 
 let name;
-if (args.length === 1) {
+let space;
+let token;
+if (args.length === 3) {
    name = args[0];
+   space = args[1];
+   token = args[2];
 } else {
    name = 'tangram-skeleton';
+   space = 'INSERT-XYZ-SPACE-ID';
+   token = 'INSERT-XYZ-TOKEN';
 }
+
+
 
 const html =
 `<html lang="en-us">
@@ -72,7 +80,7 @@ const yaml =
     camera1:
         type: perspective
 global:
-    token: XYZ-TOKEN
+    token: ${token}
     language: en
     language_text_source: |
         function() {
@@ -87,7 +95,7 @@ sources:
             access_token: global.token
     _xyz_space:
         type: GeoJSON
-        url: https://xyz.api.here.com/hub/spaces/XYZ-SPACE-ID/tile/web/{z}_{x}_{y}
+        url: https://xyz.api.here.com/hub/spaces/${space}/tile/web/{z}_{x}_{y}
         url_params:
             access_token: global.token
 layers:

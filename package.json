@@ -1,6 +1,6 @@
 {
    "name": "tangram-make",
-   "version": "2.2.0",
+   "version": "2.3.0",
    "description": "install tangram quickly",
    "main": "index.js",
    "dependencies": {},
