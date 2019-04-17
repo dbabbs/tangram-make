@@ -2,7 +2,6 @@
 const fs = require('fs');
 
 var args = process.argv.slice(2);
-console.log(args);
 
 let name;
 if (args.length === 1) {
@@ -61,7 +60,7 @@ const map = L.map('map', {
    layers: [tangram],
    zoomControl: false
 });
-map.attributionControl.addAttribution('<a href="https://here.xyz">HERE XYZ</a> | <a href="https://www.openstreetmap.org/">OSM</a>');
+map.attributionControl.addAttribution('<a href="https://here.xyz">HERE XYZ</a> | <a href="https://github.com/tangrams/tangram">Tangram</a>| <a href="https://www.openstreetmap.org/">OSM</a>');
 
 
 function onMapClick () {}
@@ -90,7 +89,7 @@ global:
             return (global.language && feature['name:'+global.language]) || feature.name;
         }
 layers:
-    xyz_space:
+    xyz_space_lines:
         data: { source: _xyz_space}
         draw:
             lines:
@@ -99,24 +98,17 @@ layers:
                 width: 2px
                 interactive: true
                 collide: false
+    xyz_space_points:
+        data: { source: _xyz_space}
+        draw:
+            points:
+                order: 10000000
+                color: '#8B9ED4'
+                size: 2px
+                interactive: true
+                collide: false
     places:
         data: { source: xyz_osm }
-        city-points:
-            filter:
-                kind: locality
-                kind_detail: city
-                $zoom: { max: 18 }
-            draw:
-                 text:
-                     text_source: global.language_text_source
-                     priority: 10
-                     order: 999
-                     font:
-                         family: Roboto Mono
-                         fill: '#C3CDD4'
-                         stroke: { color: white, width: 4 }
-                         size: [[4, 15px], [8, 18px], [12, 26px]]
-                         buffer: 2px
         city-points:
             filter:
                 kind: locality
