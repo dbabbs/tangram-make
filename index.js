@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs');
+const ghpages = require('gh-pages');
 
 var args = process.argv.slice(2);
 
@@ -15,6 +16,15 @@ if (args.length === 3) {
    space = 'INSERT-XYZ-SPACE-ID';
    token = 'INSERT-XYZ-TOKEN';
 }
+
+
+const exec = require('child_process').exec;
+
+function execute(command, callback) {
+   
+   exec(command, function(error, stdout, stderr){ callback(stdout); });
+};
+
 
 
 
@@ -200,26 +210,64 @@ layers:
 
 `
 
-if (!fs.existsSync(`./${name}`)){
-    fs.mkdirSync(`./${name}`);
+
+
+let command = `cd ${name}`
+if (!fs.existsSync(`./xyz-maps/dist/${name}`)){
+   fs.mkdirSync(`./xyz-maps/dist/${name}`, { recursive: true });
+} else {
+   command += ` && git init && git remote add origin https://github.com/dbabbs/xyz-maps.git`;
 }
 
-fs.writeFile(`./${name}/index.html`, html, function (err) {
-  if (err) throw err;
-  console.log('html created');
+execute(command, () => {
+   console.log('created git repo and added origin')
+   // callback(val);
+
+   fs.writeFile(`./xyz-maps/dist/${name}/index.html`, html, function (err) {
+      if (err) throw err;
+      console.log('html created');
+   });
+    
+    fs.writeFile(`./xyz-maps/dist/${name}/index.js`, js, function (err) {
+      if (err) throw err;
+      console.log('javascript created');
+   });
+    
+    fs.writeFile(`./xyz-maps/dist/${name}/index.css`, css, function (err) {
+      if (err) throw err;
+      console.log('css created');
+   });
+    
+    fs.writeFile(`./xyz-maps/dist/${name}/scene.yaml`, yaml, function (err) {
+      if (err) throw err;
+      console.log('yaml created');
+   });
+
+
+   const directory = `./xyz-maps/dist`;
+   const repo = `https://github.com/dbabbs/xyz-maps.git`;
+
+   //Publish Gh pages
+   ghpages.publish(directory, { repo: repo, add: true }, err => {
+      if (err) {
+         console.log(err);
+      }
+      console.log('published to gh-pages')
+
+      execute('git add . && git commit -m "auto commit by bot" && git push origin master', () => {
+         console.log('published to master')
+      })
+   });
+
+   //Publish master
+   // ghpages.publish(directory, { repo: repo, branch: 'master' }, err => {
+   //    if (err) {
+   //       console.log(err);
+   //    }
+   //    console.log('published')
+   // });
+    
 });
 
-fs.writeFile(`./${name}/index.js`, js, function (err) {
-  if (err) throw err;
-  console.log('javascript created');
-});
 
-fs.writeFile(`./${name}/index.css`, css, function (err) {
-  if (err) throw err;
-  console.log('css created');
-});
 
-fs.writeFile(`./${name}/scene.yaml`, yaml, function (err) {
-  if (err) throw err;
-  console.log('yaml created');
-});
